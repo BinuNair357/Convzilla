@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convzilla | Ultimate File Converter</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <div class="background-animation"></div>
+
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fa-solid fa-dragon"></i>
+                <h1>Convzilla</h1>
+            </div>
+            <p class="tagline">Tame your data beasts.</p>
+        </header>
+
+        <main class="converter-card">
+            <div class="drop-zone" id="drop-zone">
+                <div class="icon-container">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                </div>
+                <h3>Drag & Drop files here</h3>
+                <p>or</p>
+                <button class="browse-btn" onclick="document.getElementById('file-input').click()">Browse Files</button>
+                <input type="file" id="file-input" multiple hidden>
+                <div class="file-info" id="file-info" style="display: none;">
+                    <i class="fa-solid fa-layer-group"></i>
+                    <span id="filename">3 files selected</span>
+                    <i class="fa-solid fa-xmark remove-file" id="remove-file"></i>
+                </div>
+            </div>
+
+            <div class="controls" id="controls" style="opacity: 0.5; pointer-events: none;">
+                <div class="format-group">
+                    <label for="format-select">Convert to:</label>
+                    <div class="custom-select">
+                        <select id="format-select">
+                            <option value="" disabled selected>Select Format</option>
+                            <!-- Populated dynamically -->
+                        </select>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                </div>
+
+                <button class="convert-btn" id="convert-btn">
+                    <span>Convert Now</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                    <div class="loader" id="loader"></div>
+                </button>
+            </div>
+
+            <div id="status-message"></div>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+
+</html>
