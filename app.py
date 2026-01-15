@@ -1,6 +1,6 @@
 import os
 import traceback
-from flask import Flask, render_template, request, send_file, jsonify
+from flask import Flask, render_template, request, send_file, jsonify, after_this_request
 from werkzeug.utils import secure_filename
 from converter import convert_file
 
@@ -62,7 +62,26 @@ def convert():
         # Perform conversion
         convert_file(input_paths, output_path, target_format)
 
+        # Cleanup Input Files immediately
+        for p in input_paths:
+             try:
+                 os.remove(p)
+             except OSError:
+                 pass
+
         # Return the converted file
+        # Note: We cannot easily delete the output file *after* sending it with send_file unless we use a background task or stream it.
+        # For this local app, we will leave output files in 'converted' folder for user reference or manual cleanup.
+        # Alternatively, use after_this_request.
+        
+        @after_this_request
+        def remove_file(response):
+            try:
+                os.remove(output_path)
+            except Exception as error:
+                app.logger.error("Error removing or closing downloaded file handle", error)
+            return response
+
         return send_file(output_path, as_attachment=True, download_name=output_filename)
 
     except Exception as e:
@@ -70,4 +89,5 @@ def convert():
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    # SECURITY: Disable debug mode for production/distribution
+    app.run(debug=False, port=5000)
